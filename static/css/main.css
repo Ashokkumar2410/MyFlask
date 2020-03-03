@@ -1,0 +1,14 @@
+body {
+
+    font-family: Helvetica
+}
+
+h1 {
+     color:black;
+ }
+
+.css1 {
+     color:black;
+     background-image: linear-gradient(to right, #DFF1DF, #11A00C);
+     position:static;
+ }
