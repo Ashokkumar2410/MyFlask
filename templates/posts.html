@@ -10,9 +10,11 @@
     <hr>
     <h2>Create New Blog Post:</h2>
     <form action="/posts" method="POST">
-        <strong>Title: </strong><input type="text" name="title" value="title">
+        <strong>Title: </strong><input type="text" name="title" >
         <br><br>
         <strong>Post: </strong><input type="text" name="content" id="content">
+        <br><br>
+        <strong>Author: </strong><input type="text" name="author" id="author">
         <br><br>
         <input type="submit" value="Post">
     </form>
@@ -21,9 +23,9 @@
     {% for post in posts %}
         <h2>{{ post.title }}</h2>
         {% if post.author %}
-            <h3>By: {{ post.author }}</h3>
+            <h3><mark>By: {{ post.author }}</mark></h3>
         {% else %}
-            <h3>By: Unknown</h3>
+            <h3><mark>By: Unknown</mark></h3>
         {% endif %}
         <p>{{ post.content }}</p>
     {% endfor %}

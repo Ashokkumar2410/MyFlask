@@ -1,6 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request,redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+#import requests
 
 app = Flask(__name__)
 
@@ -17,17 +18,17 @@ class  BlogPost(db.Model):
     def __repr__(self):
         return "repr ==> Blog Post "+ str(self.id)
 
-all_posts = [
-        {
-            'title' : 'Post 1',
-            'content': 'What a wonderfulday... ',
-            'author' : 'ashok'
-        },
-        {
-            'title' : 'Post 2',
-            'content': 'i too had love story... '
-        }
-]
+# all_posts = [
+#         {
+#             'title' : 'Post 1',
+#             'content': 'What a wonderfulday... ',
+#             'author' : 'ashok'
+#         },
+#         {
+#             'title' : 'Post 2',
+#             'content': 'i too had love story... '
+#         }
+# ]
 
 @app.route('/')
 def index():
@@ -41,9 +42,21 @@ def hello():
 def hellothere(name,id):
     return "Hello %s and your id is:%s" %(name,id)
 
-@app.route('/posts')
+@app.route('/posts',methods=['GET','POST'])
 def posts():
-    return render_template("posts.html", posts=all_posts)
+    if request.method == 'POST':
+        post_title = request.form['title']
+        post_content = request.form['content']
+        post_author = request.form['author']
+        if not post_author:
+            post_author='N/A'
+        new_post = BlogPost(title=post_title, content=post_content,author=post_author)
+        db.session.add(new_post)
+        db.session.commit()
+        return redirect('/posts')
+    else:
+        all_posts=BlogPost.query.order_by(BlogPost.date_posted).all()
+        return render_template("posts.html", posts=all_posts)
 
 if __name__ == '__main__':
     app.run(debug=True)
