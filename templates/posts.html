@@ -10,23 +10,34 @@
     <hr>
     <h2>Create New Blog Post:</h2>
     <form action="/posts" method="POST">
-        <strong>Title: </strong><input type="text" name="title" >
-        <br><br>
-        <strong>Post: </strong><input type="text" name="content" id="content">
-        <br><br>
-        <strong>Author: </strong><input type="text" name="author" id="author">
-        <br><br>
-        <input type="submit" value="Post">
+        <strong>Title: </strong>
+        <input class="form-control" type="text" name="title" id="title" aria-label="Enter Title" placeholder="Enter Title">
+        <br>
+        <strong>Author: </strong>
+        <input class="form-control" type="text" name="author" id="author" aria-label="Enter author" placeholder="Enter author">
+        <br>
+          <label for="content"><strong>Post: </strong></label>
+          <textarea class="form-control" id="content" name="content" row="3" placeholder="Enter content" ></textarea>
+
+        <br>
+
+        <input class="btn btn-primary" type="submit" value="Post">
     </form>
     <hr>
 
     {% for post in posts %}
+    <br>
         <h2>{{ post.title }}</h2>
         {% if post.author %}
-            <h3><mark>By: {{ post.author }}</mark></h3>
+            <small><mark>Written By: {{ post.author }} on {{ post.date_posted }} </mark></small>
         {% else %}
-            <h3><mark>By: Unknown</mark></h3>
+            <small><mark>Written By: Unknown on {{ post.date_posted }} </mark></small>
         {% endif %}
+        <br>
         <p>{{ post.content }}</p>
+        <br>
+        <a class="btn btn-primary" href="/posts/edit/{{post.id}}">Edit</a>
+        <a class="btn btn-danger" href="/posts/delete/{{post.id}}">Delete</a>
+        <hr>
     {% endfor %}
 {% endblock %}

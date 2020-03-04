@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request,redirect
+from flask import Flask, render_template, request,redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 #import requests
@@ -16,7 +16,7 @@ class  BlogPost(db.Model):
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
     def __repr__(self):
-        return "repr ==> Blog Post "+ str(self.id)
+        return "Blog Post "+ str(self.id)
 
 # all_posts = [
 #         {
@@ -34,9 +34,22 @@ class  BlogPost(db.Model):
 def index():
     return render_template("index.html")
 
+@app.route('/<name>')
+def return_page_1(name):
+    return redirect('/')
+
 @app.route('/home')
 def hello():
-    return "Hello World"
+    WelcomeImage='''
+            <marquee behavior="alternate" width="1200" height="1000" direction="up">
+                <center>
+                    <img src="https://cdn.dribbble.com/users/2322685/screenshots/6221645/welcome-dribbble.gif" width="840" height="877" alt="The Scream">
+                    </center>
+            </marquee> '''
+    return WelcomeImage
+    #'<marquee behavior="alternate" direction="up"><strong><center>Hello Flask Users!!!!!</center></strong></marquee>'
+
+#    "Hello Flask Users!!!!!"
 
 @app.route('/home/users/<string:name>/<int:id>', methods=['GET'])
 def hellothere(name,id):
@@ -57,6 +70,26 @@ def posts():
     else:
         all_posts=BlogPost.query.order_by(BlogPost.date_posted).all()
         return render_template("posts.html", posts=all_posts)
+@app.route('/posts/delete/<int:id>')
+def delete(id):
+    post = BlogPost.query.get_or_404(id)
+    db.session.delete(post)
+    db.session.commit()
+    return redirect('/posts')
+
+@app.route('/posts/edit/<int:id>', methods=['GET','POST'])
+def edit(id):
+    post = BlogPost.query.get_or_404(id)
+    if request.method == 'POST':
+
+        post.title = request.form['title']
+        post.content = request.form['content']
+        post.author = request.form['author']
+        db.session.commit()
+        return redirect('/posts')
+    else:
+        return render_template('edit.html',post=post)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
