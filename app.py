@@ -34,16 +34,20 @@ class  BlogPost(db.Model):
 def index():
     return render_template("index.html")
 
-@app.route('/<name>')
-def return_page_1(name):
+@app.route('/home')
+def return_page_1():
     return redirect('/')
 
-@app.route('/home')
+@app.route('/<name>')
+def return_page_2(name):
+    return redirect('/err')
+
+@app.route('/err')
 def hello():
     WelcomeImage='''
             <marquee behavior="alternate" width="1200" height="1000" direction="up">
                 <center>
-                    <img src="https://cdn.dribbble.com/users/2322685/screenshots/6221645/welcome-dribbble.gif" width="840" height="877" alt="The Scream">
+                    <img src="https://i.pinimg.com/originals/86/41/80/86418032b715698a4dfa6684b50c12af.gif" width="840" height="877" alt="The Scream">
                     </center>
             </marquee> '''
     return WelcomeImage
